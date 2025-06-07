@@ -16,11 +16,40 @@ function App() {
   const [input, setInput] = useState('');
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
+  const [error, setError] = useState(''); // New error state
   const API_KEY = '343a143fd37d6176444a02142e8232ed';
 
   useClock(setDate);
   useGeolocationWeather(setWeather, setLocation, setForecast, API_KEY);
-  useWeatherByLocation(location, setWeather, setForecast, API_KEY);
+
+  // Custom fetch for weather with error handling
+  React.useEffect(() => {
+    if (!location) return;
+    setError(''); // Clear error on new search
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}&units=metric`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.cod === '404' || data.cod === 404) {
+          setError('City not found. Please enter a valid city name.');
+          setWeather(null);
+          setForecast([]);
+        } else {
+          setWeather(data);
+          setError('');
+          // Fetch forecast only if city is valid
+          fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${API_KEY}&units=metric`)
+            .then(res => res.json())
+            .then(forecastData => {
+              setForecast(forecastData.list ? forecastData.list.slice(0, 5) : []);
+            });
+        }
+      })
+      .catch(() => {
+        setError('Failed to fetch weather data.');
+        setWeather(null);
+        setForecast([]);
+      });
+  }, [location, API_KEY]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -29,6 +58,11 @@ function App() {
       setInput('');
     }
   };
+
+  // Clear error on input change
+  React.useEffect(() => {
+    if (input) setError('');
+  }, [input]);
 
   const showTime = getShowTime(date);
   const { showDay, showDate } = getDayMonthDate(date);
@@ -65,11 +99,18 @@ function App() {
               return 'from-blue-900 via-blue-800 to-transparent';
           }
         })()} opacity-80`}></div>
-        
+
       </div>
       <div className="flex flex-col items-center relative z-10">
-        <LogoTitle />
-        <Slogan />
+        <div className='mb-3'>
+          <LogoTitle />
+          <Slogan />
+        </div>
+        {error && (
+          <div className="mb-4 px-5 py-2 bg-red-600 text-white font-semibold rounded shadow text-center animate-pulse max-w-md">
+            {error}
+          </div>
+        )}
         <div className="flex w-[768px] h-[488px] bg-black bg-opacity-60 rounded-2xl overflow-hidden shadow-2xl border border-white/10 backdrop-blur-md ring-2 ring-blue-400/20 transition-transform duration-300 hover:scale-[1.025]">
           <LeftPanel weather={weather} location={location} showTime={showTime} showDay={showDay} showDate={showDate} />
           <RightPanel handleSearch={handleSearch} input={input} setInput={setInput} weather={weather} forecast={forecast} />
