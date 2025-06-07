@@ -5,7 +5,7 @@ import { FaMicrophone } from "react-icons/fa";
 
 const RightPanel = ({ handleSearch, input, setInput, weather, forecast }) => (
   <div className="w-1/2 bg-gray-900 text-white flex flex-col justify-center p-6">
-    <div className='mb-10'>
+    <div className='mt-6'>
       <form className="flex items-center max-w-lg mx-auto" onSubmit={handleSearch}>
         <label htmlFor="voice-search" className="sr-only">Search</label>
         <div className="relative w-full">
@@ -19,7 +19,7 @@ const RightPanel = ({ handleSearch, input, setInput, weather, forecast }) => (
         </button>
       </form>
     </div>
-    <div className="flex flex-col items-center mb-6">
+    <div className="flex flex-col items-center mb-4">
       {weather && weather.weather && weather.weather[0] && (
         <img
           src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
@@ -53,6 +53,27 @@ const RightPanel = ({ handleSearch, input, setInput, weather, forecast }) => (
         ))
       )}
     </div>
+
+    {weather && weather.main && (
+      <div className="mb-4 mt-4 px-4 py-3 bg-gray-800 bg-opacity-80 rounded-lg shadow flex flex-wrap justify-between gap-y-2 text-sm">
+        <div className="flex flex-col items-center flex-1 min-w-[100px]">
+          <span className="font-semibold">Wind</span>
+          <span>{weather.wind ? `${weather.wind.speed} m/s` : '--'}</span>
+        </div>
+        <div className="flex flex-col items-center flex-1 min-w-[100px]">
+          <span className="font-semibold">Humidity</span>
+          <span>{weather.main.humidity != null ? `${weather.main.humidity}%` : '--'}</span>
+        </div>
+        <div className="flex flex-col items-center flex-1 min-w-[100px]">
+          <span className="font-semibold">Pressure</span>
+          <span>{weather.main.pressure != null ? `${weather.main.pressure} hPa` : '--'}</span>
+        </div>
+        <div className="flex flex-col items-center flex-1 min-w-[100px]">
+          <span className="font-semibold">Feels Like</span>
+          <span>{weather.main.feels_like != null ? `${Math.round(weather.main.feels_like)}°C` : '--'}</span>
+        </div>
+      </div>
+    )}
   </div>
 );
 
