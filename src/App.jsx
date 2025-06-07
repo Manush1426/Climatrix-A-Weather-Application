@@ -34,8 +34,40 @@ function App() {
   const { showDay, showDate } = getDayMonthDate(date);
 
   return (
-    <div className="w-full h-screen bg-cover bg-center flex items-center justify-center" style={{ backgroundImage: 'url("/dummy bg img.jpg")' }}>
-      <div className="flex flex-col items-center">
+    <div className={"w-full h-screen bg-cover bg-center flex items-center justify-center relative"} style={{ backgroundImage: 'url("")' }}>
+      {/* Double gradient overlay: bottom and top for extra darkness */}
+      <div className={`absolute inset-0 z-0 pointer-events-none transition-all duration-500`}>
+        <div className={`absolute inset-0 bg-gradient-to-b ${(() => {
+          const main = weather && weather.weather && weather.weather[0] && weather.weather[0].main;
+          switch ((main || '').toLowerCase()) {
+            case 'clear':
+              return 'from-blue-900 via-blue-950 to-transparent';
+            case 'clouds':
+              return 'from-gray-800 via-gray-900 to-transparent';
+            case 'rain':
+              return 'from-lime-900 to-emerald-50';
+            case 'drizzle':
+              return 'from-cyan-900 via-blue-900 to-transparent';
+            case 'thunderstorm':
+              return 'from-purple-900 via-indigo-950 to-transparent';
+            case 'snow':
+              return 'from-blue-900 via-gray-300 to-transparent';
+            case 'mist':
+            case 'fog':
+            case 'haze':
+              return 'from-gray-700 via-gray-800 to-transparent';
+            case 'dust':
+            case 'sand':
+              return 'from-yellow-900 via-orange-900 to-transparent';
+            case 'tornado':
+              return 'from-gray-900 via-gray-950 to-transparent';
+            default:
+              return 'from-blue-900 via-blue-800 to-transparent';
+          }
+        })()} opacity-80`}></div>
+        
+      </div>
+      <div className="flex flex-col items-center relative z-10">
         <LogoTitle />
         <Slogan />
         <div className="flex w-[768px] h-[488px] bg-black bg-opacity-60 rounded-2xl overflow-hidden shadow-2xl border border-white/10 backdrop-blur-md ring-2 ring-blue-400/20 transition-transform duration-300 hover:scale-[1.025]">
