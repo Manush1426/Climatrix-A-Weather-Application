@@ -5,10 +5,13 @@ const VoiceSearch = ({ setInput, handleSearch }) => {
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   React.useEffect(() => {
-    if (transcript) {
+    if (transcript && !listening) {
       setInput(transcript);
+      if (handleSearch) {
+        handleSearch({ preventDefault: () => {} });
+      }
     }
-  }, [transcript, setInput]);
+  }, [transcript, listening, setInput, handleSearch]);
 
   const handleMicClick = () => {
     resetTranscript();
