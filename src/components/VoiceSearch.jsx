@@ -2,7 +2,7 @@ import React from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const VoiceSearch = ({ setInput, handleSearch }) => {
-  const { transcript, listening, resetTranscript } = useSpeechRecognition();
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   React.useEffect(() => {
     if (transcript) {
@@ -14,6 +14,11 @@ const VoiceSearch = ({ setInput, handleSearch }) => {
     resetTranscript();
     SpeechRecognition.startListening({ continuous: false, language: 'en-US' });
   };
+
+  if (typeof window === 'undefined' || !browserSupportsSpeechRecognition) {
+    // SSR or unsupported browser: don't render the mic button
+    return null;
+  }
 
   return (
     <button
