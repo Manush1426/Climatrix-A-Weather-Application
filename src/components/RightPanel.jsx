@@ -1,5 +1,7 @@
 import React from 'react';
 import VoiceSearch from './VoiceSearch';
+import { FaMicrophone } from "react-icons/fa";
+
 
 const RightPanel = ({ handleSearch, input, setInput, weather, forecast }) => (
   <div className="w-1/2 bg-gray-900 text-white flex flex-col justify-center p-6">
