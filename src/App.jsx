@@ -74,7 +74,7 @@ function App() {
           <LeftPanel weather={weather} location={location} showTime={showTime} showDay={showDay} showDate={showDate} />
           <RightPanel handleSearch={handleSearch} input={input} setInput={setInput} weather={weather} forecast={forecast} />
         </div>
-        <p className="text-white text-sm mt-4">© Created by Manush Patel | First React Project</p>
+        <p className="text-black text-sm mt-4">© Created by Manush Patel | First React Project</p>
       </div>
     </div>
   )
